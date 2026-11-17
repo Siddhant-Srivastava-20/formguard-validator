@@ -13,13 +13,31 @@ function validateForm(data, rules) {
     if (!rules || typeof rules !== "object" || Array.isArray(rules)) {
         throw new TypeError("Validation rules must be an object");
     }
-    for (const field in rules) {
+    for (const field of Object.keys(rules)) {
         const value = data[field];
         const fieldRules = rules[field];
         const fieldErrors = [];
+        if (!fieldRules || typeof fieldRules !== "object" || Array.isArray(fieldRules)) {
+            throw new TypeError(`${field} rules must be an object`);
+        }
+        if (
+            Object.prototype.hasOwnProperty.call(fieldRules, "custom") &&
+            typeof fieldRules.custom !== "function"
+        ) {
+            throw new TypeError(`${field} custom rule must be a function`);
+        }
+        for (const key of ["minLength", "maxLength"]) {
+            if (
+                fieldRules[key] !== undefined &&
+                (!Number.isInteger(fieldRules[key]) || fieldRules[key] < 0)
+            ) {
+                throw new TypeError(`${field} ${key} must be a non-negative integer`);
+            }
+        }
+        const isEmpty = value === undefined || value === null || value === "";
         if (fieldRules.required && !isRequired(value)) {
             fieldErrors.push(`${field} is required`);
-        } else if (value !== undefined && value !== null && value !== "") {
+        } else if (!isEmpty) {
             if (fieldRules.isEmail && !isEmail(value)) {
                 fieldErrors.push(`${field} must be a valid email`);
             }
@@ -38,10 +56,19 @@ function validateForm(data, rules) {
             if (fieldRules.isUsername && !isUsername(value)) {
                 fieldErrors.push(`${field} must be a valid username`);
             }
-            if (fieldRules.minLength !== undefined && String(value).length < fieldRules.minLength) {
+            if (fieldRules.custom && !fieldRules.custom(value)) {
+                fieldErrors.push(`${field} failed custom validation`);
+            }
+            if (
+                fieldRules.minLength !== undefined &&
+                String(value).length < fieldRules.minLength
+            ) {
                 fieldErrors.push(`${field} must contain at least ${fieldRules.minLength} characters`);
             }
-            if (fieldRules.maxLength !== undefined && String(value).length > fieldRules.maxLength) {
+            if (
+                fieldRules.maxLength !== undefined &&
+                String(value).length > fieldRules.maxLength
+            ) {
                 fieldErrors.push(`${field} must not exceed ${fieldRules.maxLength} characters`);
             }
         }
