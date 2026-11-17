@@ -1,0 +1,29 @@
+
+{
+  "name": "formguard-validator",
+  "version": "1.0.0",
+  "description": "A reusable JavaScript input validation library for Node.js applications",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "form-validation",
+    "input-validation",
+    "nodejs",
+    "javascript",
+    "email-validation",
+    "password-validation"
+  ],
+  "author": "Siddhant Srivastava",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ]
+}
