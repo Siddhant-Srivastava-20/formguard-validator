@@ -273,6 +273,7 @@ Expected output:
 | isStrongPassword | Checks password strength |
 | isNumeric | Checks numeric values |
 | isUsername | Validates username format |
+| custom | Applies a user-defined validation function |
 | minLength | Sets minimum character length |
 | maxLength | Sets maximum character length |
 
@@ -354,11 +355,11 @@ This structure improves code organization, maintainability and reusability.
 
 ## Future Improvements
 
-- Custom validation rules
-- Configurable validation messages
+- Configurable validation error messages
 - Additional validation methods
-- Improved automated test coverage
-- More flexible validation options
+- Support for more complex validation conditions
+- Improved validation performance
+- Additional automated test cases
 
 ## License
 
